@@ -1,0 +1,312 @@
+[
+    {
+        "id": "aca45ea39cbf7ead",
+        "type": "tab",
+        "label": "플로우 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "eb95ed5f03be5777",
+        "type": "inject",
+        "z": "aca45ea39cbf7ead",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 140,
+        "wires": [
+            [
+                "93648343d8844052"
+            ]
+        ]
+    },
+    {
+        "id": "93648343d8844052",
+        "type": "function",
+        "z": "aca45ea39cbf7ead",
+        "name": "Read_Status",
+        "func": "msg.payload = {\n    'fc': 3, \n    'unitid': 1, \n    'address': 99, \n    'quantity': 1 \n    };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 300,
+        "wires": [
+            [
+                "29bcb5165b04e205"
+            ]
+        ]
+    },
+    {
+        "id": "29bcb5165b04e205",
+        "type": "modbus-flex-getter",
+        "z": "aca45ea39cbf7ead",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "logIOActivities": false,
+        "server": "8e49b4aba60284a4",
+        "useIOFile": false,
+        "ioFile": "",
+        "useIOForPayload": false,
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 470,
+        "y": 300,
+        "wires": [
+            [
+                "c8943cf47ce00ce9",
+                "cb1b0ace3e346071"
+            ],
+            [
+                "fd1e12a11ea436b5"
+            ]
+        ]
+    },
+    {
+        "id": "fd1e12a11ea436b5",
+        "type": "modbus-response",
+        "z": "aca45ea39cbf7ead",
+        "name": "",
+        "registerShowMax": 20,
+        "x": 690,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "10e5b9e3a2630370",
+        "type": "modbus-flex-write",
+        "z": "aca45ea39cbf7ead",
+        "name": "",
+        "showStatusActivities": false,
+        "showErrors": false,
+        "showWarnings": true,
+        "server": "8e49b4aba60284a4",
+        "emptyMsgOnFail": false,
+        "keepMsgProperties": false,
+        "delayOnStart": false,
+        "startDelayTime": "",
+        "x": 790,
+        "y": 900,
+        "wires": [
+            [],
+            [
+                "19e1cccb035db6cf"
+            ]
+        ]
+    },
+    {
+        "id": "065fdaaf0f4bf8e4",
+        "type": "function",
+        "z": "aca45ea39cbf7ead",
+        "name": "Write Relay",
+        "func": "var newMsg = {value: msg.payload.value};\nif (msg.payload)\n{\n    newMsg.value = 1;\n}else{\n    newMsg.value = 0;\n}\n\nmsg.payload = {\n    value: newMsg.value,\n    'fc': 6, \n    'unitid': 1, \n    'address': 109, \n    'quantity': 1 \n    };\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 900,
+        "wires": [
+            [
+                "10e5b9e3a2630370"
+            ]
+        ]
+    },
+    {
+        "id": "19e1cccb035db6cf",
+        "type": "modbus-response",
+        "z": "aca45ea39cbf7ead",
+        "name": "",
+        "registerShowMax": 20,
+        "x": 1070,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "3f2a9fe28f02348e",
+        "type": "ui_switch",
+        "z": "aca45ea39cbf7ead",
+        "name": "",
+        "label": "switch",
+        "tooltip": "",
+        "group": "cd537df18c2a74dd",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 130,
+        "y": 900,
+        "wires": [
+            [
+                "065fdaaf0f4bf8e4"
+            ]
+        ]
+    },
+    {
+        "id": "c8943cf47ce00ce9",
+        "type": "ui_numeric",
+        "z": "aca45ea39cbf7ead",
+        "name": "",
+        "label": "numeric",
+        "tooltip": "",
+        "group": "cd537df18c2a74dd",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": true,
+        "topic": "topic",
+        "topicType": "msg",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "className": "",
+        "x": 700,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "20564d96dfa02b9d",
+        "type": "mongodb out",
+        "z": "aca45ea39cbf7ead",
+        "mongodb": "cbdabc51a6b73374",
+        "name": "",
+        "collection": "collection",
+        "payonly": false,
+        "upsert": false,
+        "multi": false,
+        "operation": "insert",
+        "x": 1210,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3ed799ecd7b3f44c",
+        "type": "debug",
+        "z": "aca45ea39cbf7ead",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "cb1b0ace3e346071",
+        "type": "function",
+        "z": "aca45ea39cbf7ead",
+        "name": "function 1",
+        "func": "var newMsg = [{payload: msg.payload}];\nreturn [msg, newMsg];",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 160,
+        "wires": [
+            [],
+            [
+                "20564d96dfa02b9d",
+                "3ed799ecd7b3f44c"
+            ]
+        ]
+    },
+    {
+        "id": "8e49b4aba60284a4",
+        "type": "modbus-client",
+        "name": "",
+        "clienttype": "serial",
+        "bufferCommands": true,
+        "stateLogEnabled": false,
+        "queueLogEnabled": true,
+        "failureLogEnabled": true,
+        "tcpHost": "127.0.0.1",
+        "tcpPort": "502",
+        "tcpType": "DEFAULT",
+        "serialPort": "/dev/ttyUSB0",
+        "serialType": "RTU-BUFFERD",
+        "serialBaudrate": "19200",
+        "serialDatabits": "8",
+        "serialStopbits": "1",
+        "serialParity": "none",
+        "serialConnectionDelay": "100",
+        "serialAsciiResponseStartDelimiter": "0x3A",
+        "unit_id": "1",
+        "commandDelay": "1",
+        "clientTimeout": "1000",
+        "reconnectOnTimeout": true,
+        "reconnectTimeout": "2000",
+        "parallelUnitIdsAllowed": true,
+        "showWarnings": true,
+        "showLogs": true
+    },
+    {
+        "id": "cd537df18c2a74dd",
+        "type": "ui_group",
+        "name": "Group 1",
+        "tab": "c0fb49f7ba77f523",
+        "order": 1,
+        "disp": true,
+        "width": 6
+    },
+    {
+        "id": "cbdabc51a6b73374",
+        "type": "mongodb",
+        "hostname": "192.168.0.33",
+        "topology": "direct",
+        "connectOptions": "",
+        "port": "27017",
+        "db": "Test",
+        "name": ""
+    },
+    {
+        "id": "c0fb49f7ba77f523",
+        "type": "ui_tab",
+        "name": "Tab 1",
+        "icon": "dashboard",
+        "order": 1
+    }
+]
